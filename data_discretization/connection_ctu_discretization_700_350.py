@@ -259,18 +259,18 @@ def discretize(data, data_dir, scenario, window_size, stride_size, percentile_nu
 
         # windows with manual way
         dates = selected_data.index.tolist()
-        if len(dates) < 2:
-            continue
-        date_diffs = [date_diff(s, t) for s, t in zip(dates, dates[1:])]
-        # date_diffs = [d for d in date_diffs if d != 0]
-        date_median = int(np.median(date_diffs))
-        if date_median == 0:
-            date_median += 1
-        print('Window = {}, Stride = {}'.format(str(date_median * window_size), str(date_median * window_size / 2)))
+        # if len(dates) < 2:
+        #     continue
+        # date_diffs = [date_diff(s, t) for s, t in zip(dates, dates[1:])]
+        # # date_diffs = [d for d in date_diffs if d != 0]
+        # date_median = int(np.median(date_diffs))
+        # if date_median == 0:
+        #     date_median += 1
+        print('Window = {}, Stride = {}'.format(str(window_size), str(stride_size)))
         starting_date = selected_data.index.tolist()[0].strftime('%Y/%m/%d %H:%M:%S.%f')
         ending_date = selected_data.index.tolist()[-1].strftime('%Y/%m/%d %H:%M:%S.%f')
         r = pd.date_range(start=starting_date, end=ending_date,
-                          freq=str(date_median * window_size / 2) + 'ms').strftime(
+                          freq=str(stride_size) + 'ms').strftime(
             '%Y-%m-%d %H:%M:%S.%f').values
         # r = pd.date_range(start=starting_date, end=ending_date, freq='{}ms'.format(stride_size)).strftime(
         #     '%Y-%m-%d %H:%M:%S.%f').values
@@ -367,7 +367,7 @@ def discretize_for_single_scenario():
     for s in scenarios:
         scenario = 'scenario_{}'.format(s)
         dataset = 'CTU-Malware-Capture-Botnet-{}'.format(s)
-        data_dir = 'discretized_data/ctu_13/connection/single_scenario/{}/{}-{}_median__traces_ctu_{}'.format(scenario,
+        data_dir = 'discretized_data/ctu_13/connection/single_scenario/{}/{}-{}_traces_ctu_{}'.format(scenario,
                                                                                                               window_size,
                                                                                                               stride_size,
                                                                                                               s)
@@ -380,8 +380,8 @@ def discretize_for_single_scenario():
 
 
 def discretize_for_multiple_scenarios():
-    window_size = 1000
-    stride_size = 500
+    window_size = 700
+    stride_size = 350
     scenarios = list(range(42, 55))
     training_sets = [44, 45, 46, 48, 51, 52, 52, 54]
     all_conf_data = pd.DataFrame()
@@ -399,12 +399,15 @@ def discretize_for_multiple_scenarios():
     all_conf_data = all_conf_data.sort_index()
     # # percentile_num = get_precentiles(all_conf_data)
     percentile_num = {'duration': 2, 'packets': 3, 'src_bytes': 2, 'dst_bytes': 2}
-    conf_dir = 'discretized_data_1000_500/ctu_13/connection/multiple_scenarios/configuration_data/'
+    conf_dir = 'discretized_data_{}_{}/ctu_13/connection/multiple_scenarios/configuration_data/'.format(window_size,
+                                                                                                        stride_size)
     extract_conf_traces(window_size, stride_size, all_conf_data, percentile_num, conf_dir, '')
     for s in scenarios:
         scenario = 'scenario_{}'.format(s)
         dataset = 'CTU-Malware-Capture-Botnet-{}'.format(s)
-        data_dir = 'discretized_data_1000_500/ctu_13/connection/multiple_scenarios/{}/{}-{}_median__traces_ctu_{}'.format(
+        data_dir = 'discretized_data_{}_{}/ctu_13/connection/multiple_scenarios/{}/{}-{}_traces_ctu_{}'.format(
+            window_size,
+            stride_size,
             scenario,
             window_size,
             stride_size,
