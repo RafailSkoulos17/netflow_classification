@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="lsh" targetName="lsh" />
+    </generated>
+  </component>
+  <component name="CMakeSettings" AUTO_RELOAD="true">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7a3c2740-52c8-4ba2-84e8-f5388cd27871" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="ProjectId" id="1WqE5kpOSK1xBIofllH6F2ksg7k" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="restartRequiresConfirmation" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/include" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/include" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="lsh" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="lsh" TARGET_NAME="lsh" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="lsh" RUN_TARGET_NAME="lsh">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7a3c2740-52c8-4ba2-84e8-f5388cd27871" name="Default Changelist" comment="" />
+      <created>1579868543670</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1579868543670</updated>
+      <workItem from="1579868544955" duration="13183000" />
+      <workItem from="1580138612762" duration="6064000" />
+      <workItem from="1580211004962" duration="270000" />
+      <workItem from="1580211485706" duration="20549000" />
+      <workItem from="1580381654618" duration="17615000" />
+      <workItem from="1580470310528" duration="2332000" />
+      <workItem from="1580473222196" duration="4426000" />
+      <workItem from="1580486019829" duration="1873000" />
+      <workItem from="1580731106580" duration="615000" />
+      <workItem from="1580815223288" duration="50000" />
+      <workItem from="1581683878879" duration="304000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="686" y="357" width="604" height="390" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1579873602944">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="686" y="357" width="604" height="390" key="#com.intellij.fileTypes.FileTypeChooser/67.27.1853.1053@67.27.1853.1053" timestamp="1579873602944" />
+    <state x="889" y="308" width="198" height="488" key="#xdebugger.XInspectDialog" timestamp="1580392273016">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="889" y="308" width="198" height="488" key="#xdebugger.XInspectDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1580392273016" />
+    <state x="1214" y="36" width="650" height="593" key="#xdebugger.evaluate" timestamp="1580474281215">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="1214" y="36" width="650" height="593" key="#xdebugger.evaluate/67.27.1853.1053@67.27.1853.1053" timestamp="1580474281215" />
+    <state x="776" y="310" width="424" height="484" key="FileChooserDialogImpl" timestamp="1579871444654">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="776" y="310" width="424" height="484" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1579871444654" />
+    <state width="1807" height="343" key="GridCell.Tab.0.bottom" timestamp="1580485995606">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state width="1807" height="343" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1580485995606" />
+    <state width="1807" height="343" key="GridCell.Tab.0.center" timestamp="1580485995605">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state width="1807" height="343" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1580485995605" />
+    <state width="1807" height="343" key="GridCell.Tab.0.left" timestamp="1580485995604">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state width="1807" height="343" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1580485995604" />
+    <state width="1807" height="343" key="GridCell.Tab.0.right" timestamp="1580485995605">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state width="1807" height="343" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1580485995605" />
+    <state width="1807" height="343" key="GridCell.Tab.1.bottom" timestamp="1580485995608">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state width="1807" height="343" key="GridCell.Tab.1.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1580485995608" />
+    <state width="1807" height="343" key="GridCell.Tab.1.center" timestamp="1580485995607">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state width="1807" height="343" key="GridCell.Tab.1.center/67.27.1853.1053@67.27.1853.1053" timestamp="1580485995607" />
+    <state width="1807" height="343" key="GridCell.Tab.1.left" timestamp="1580485995606">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state width="1807" height="343" key="GridCell.Tab.1.left/67.27.1853.1053@67.27.1853.1053" timestamp="1580485995606" />
+    <state width="1807" height="343" key="GridCell.Tab.1.right" timestamp="1580485995607">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state width="1807" height="343" key="GridCell.Tab.1.right/67.27.1853.1053@67.27.1853.1053" timestamp="1580485995607" />
+    <state width="926" height="527" key="XDebugger.FullValuePopup" timestamp="1580401559986">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state width="926" height="527" key="XDebugger.FullValuePopup/67.27.1853.1053@67.27.1853.1053" timestamp="1580401559986" />
+    <state x="649" y="380" key="com.intellij.ide.util.TipDialog" timestamp="1580815267832">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="649" y="380" key="com.intellij.ide.util.TipDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1580815267832" />
+    <state x="528" y="291" width="920" height="522" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1580408512752">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="528" y="291" width="920" height="522" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/67.27.1853.1053@67.27.1853.1053" timestamp="1580408512752" />
+    <state x="640" y="283" width="707" height="538" key="find.popup" timestamp="1580213690834">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="640" y="283" width="707" height="538" key="find.popup/67.27.1853.1053@67.27.1853.1053" timestamp="1580213690834" />
+    <state x="657" y="253" key="run.anything.popup" timestamp="1580406916449">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="657" y="253" key="run.anything.popup/67.27.1853.1053@67.27.1853.1053" timestamp="1580406916449" />
+    <state x="656" y="257" width="672" height="678" key="search.everywhere.popup" timestamp="1580226587731">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="656" y="257" width="672" height="678" key="search.everywhere.popup/67.27.1853.1053@67.27.1853.1053" timestamp="1580226587731" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/include/matrix.h</url>
+          <line>119</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/include/matrix.h</url>
+          <line>133</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/run_lsh.cpp</url>
+          <line>80</line>
+          <option name="timeStamp" value="41" />
+        </line-breakpoint>
+        <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/run_lsh.cpp</url>
+          <line>66</line>
+          <option name="timeStamp" value="67" />
+        </line-breakpoint>
+        <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/run_lsh.cpp</url>
+          <line>68</line>
+          <option name="timeStamp" value="71" />
+        </line-breakpoint>
+        <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/run_lsh.cpp</url>
+          <line>64</line>
+          <option name="timeStamp" value="72" />
+        </line-breakpoint>
+        <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/include/rh_lsh.h</url>
+          <line>207</line>
+          <option name="timeStamp" value="87" />
+        </line-breakpoint>
+        <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/include/rh_lsh.h</url>
+          <line>147</line>
+          <option name="timeStamp" value="88" />
+        </line-breakpoint>
+        <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/include/rh_lsh.h</url>
+          <line>155</line>
+          <option name="timeStamp" value="89" />
+        </line-breakpoint>
+        <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/include/rh_lsh.h</url>
+          <line>156</line>
+          <option name="timeStamp" value="91" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/run_lsh_2.cpp</url>
+          <line>101</line>
+          <option name="timeStamp" value="116" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/include/rbs_lsh.h</url>
+          <line>190</line>
+          <option name="timeStamp" value="126" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint enabled="true" type="CidrExceptionBreakpoint" />
+      </default-breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="CMakeRunConfiguration">
+        <watch expression="mylsh.tables[2]" />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>

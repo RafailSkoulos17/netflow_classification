@@ -1,0 +1,1 @@
+/usr/bin/c++   -std=c++11  -g  -rdynamic CMakeFiles/lsh.dir/run_lsh.cpp.o  -o lsh 
