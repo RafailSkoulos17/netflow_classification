@@ -1,0 +1,7 @@
+data/*
+venv/*
+cmake-build-debug/*
+*.pyc
+*.dot
+__pycache__/*
+profiling_results/*
