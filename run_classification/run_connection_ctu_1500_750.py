@@ -117,9 +117,9 @@ def train_model(malicious_traces_file, difference):
     parser.add_argument('--satdfabound', '-D', help="satdfabound", type=str, default='150')
     parser.add_argument('--seed', '-s', help="seed", type=str, default='42')
     parser.add_argument('--testmerge', '-t', help="testmerge", type=str, default='1')
-    parser.add_argument('--klthreshold', '-T', help="klthreshold", type=str, default='0.05')
+    parser.add_argument('--klthreshold', '-T', help="klthreshold", type=str, default='0.01')
     parser.add_argument('--largestblue', '-a', help="largestblue", type=str, default='0')
-    parser.add_argument('--tablesize', '-S', help="tablesize", type=str, default='50')
+    parser.add_argument('--tablesize', '-S', help="tablesize", type=str, default='1000')
     parser.add_argument('--numoftables', '-N', help="numoftables", type=str, default='1')
     parser.add_argument('--vectordimension', '-v', help="vectordimension", type=str, default='30')
     parser.add_argument('--binarycodebytes', '-c', help="binarycodebytes", type=str, default='100')
@@ -154,7 +154,7 @@ def evaluate_single_scenario(all_hosts, malicious_traces_file, configuration_tra
     if lsh:
         with open(malicious_traces_file, 'r') as f:
             i = f.readline().split()[1]
-        klthreshold, states = train_model(malicious_traces_file, str(int(i) + 3))
+        klthreshold, states = train_model(malicious_traces_file, str(int(i) + 5))
         model = malicious_traces_file + '_dir/final.dot'
     else:
         model = train_trigram_model(malicious_traces_file)
@@ -358,7 +358,9 @@ def run_single_scenario_evaluation(lsh=True):
     global stride
     global data_dir
     global scenario
-    rootdir = "../data/ctu_13/connection/single_scenario"
+    window = '1500'
+    stride = '750'
+    rootdir = '../data/discretized_data_{}_{}/ctu_13/connection/single_scenario'.format(window, stride)
     for subdir, dirs, files in os.walk(rootdir):
         if len(subdir.split('/')) != 5:
             continue
@@ -366,16 +368,7 @@ def run_single_scenario_evaluation(lsh=True):
         scenario = dir.split('_')[-1]
         print("Scenario: ", scenario)
         sheet_name = scenario
-        try:
-            window = dir.split('-')[0]
-            stride = dir.split('-')[1].split('_')[0]
-            # scenario = '50'
-            window = str(window) + 'median'
-            stride = str(stride) + 'median'
-        except IndexError:
-            window = 'flex'
-            stride = 'flex'
-        # data_dir = "data/{}-{}_traces_ctu_{}/".format(window, stride, scenario)
+
         data_dir = os.path.join(subdir, dir)
         all_hosts = glob.glob(data_dir + "/*ctu_{}*".format(scenario))
         conf_hosts = glob.glob(subdir + "/configuration_traces" + "/*ctu_{}*".format(scenario))
@@ -412,14 +405,7 @@ def run_multiple_scenarios_evaluation(lsh=True):
             dir = [d for d in dirs if 'ctu' in d][0]
             scenario = dir.split('_')[-1]
             sheet_name = scenario
-            # try:
-            #     window = dir.split('-')[0]
-            #     stride = dir.split('-')[1].split('_')[0]
-            #     # window = str(window) + 'median'
-            #     # stride = str(stride) + 'median'
-            # except IndexError:
-            #     window = 'flex'
-            #     stride = 'flex'
+
             data_dir = os.path.join(subdir, dir)
             dir_files = os.listdir(data_dir)
             for item in dir_files:
@@ -435,13 +421,16 @@ def run_multiple_scenarios_evaluation(lsh=True):
                 if lsh:
                     with open(malicious_traces_file, 'r') as f:
                         i = f.readline().split()[1]
-                        klthreshold, states = train_model(malicious_traces_file, str(int(i) + 3))
+                        klthreshold, states = train_model(malicious_traces_file, str(int(i) + 5))
                     model = malicious_traces_file + '_dir/final.dot'
+                    if os.path.exists(model):
+                        models += [model]
+                        given_malicious_trace += [malicious_traces_file]
                 else:
                     model = train_trigram_model(malicious_traces_file)
+                    models += [model]
                     klthreshold, states = 0, 0
-                given_malicious_trace += [malicious_traces_file]
-                models += [model]
+                    given_malicious_trace += [malicious_traces_file]
                 # all_args += [args]
                 # all_states += [states]
 
@@ -452,10 +441,6 @@ def run_multiple_scenarios_evaluation(lsh=True):
             dir = [d for d in dirs if 'ctu' in d][0]
             scenario = dir.split('_')[-1]
             sheet_name = scenario
-            window = dir.split('-')[0]
-            stride = dir.split('-')[1].split('_')[0]
-            window = str(window) + 'median'
-            stride = str(stride) + 'median'
             data_dir = os.path.join(subdir, dir)
 
             all_connections = glob.glob(data_dir + "/*")
@@ -467,5 +452,5 @@ def run_multiple_scenarios_evaluation(lsh=True):
 
 if __name__ == '__main__':
     # run_single_scenario_evaluation(lsh=True)
-    run_multiple_scenarios_evaluation(lsh=False)
+    # run_multiple_scenarios_evaluation(lsh=False)
     run_multiple_scenarios_evaluation(lsh=True)
