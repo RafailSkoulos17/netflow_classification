@@ -413,8 +413,8 @@ def discretize_for_multiple_scenarios():
             data_dict[s] = read_and_process_data(dataset)
 
     all_conf_data = all_conf_data.sort_index()
-    percentile_num = get_precentiles(all_conf_data)
-    # percentile_num = {'duration': 2, 'packets': 3, 'src_bytes': 2, 'dst_bytes': 2}
+    # percentile_num = get_precentiles(all_conf_data)
+    percentile_num = {'duration': 2, 'packets': 3, 'src_bytes': 2, 'dst_bytes': 2}
     conf_dir = 'discretized_data_{}median_{}median/ctu_13/connection/multiple_scenarios/configuration_data/'.format(
         window_size,
         stride_size)
