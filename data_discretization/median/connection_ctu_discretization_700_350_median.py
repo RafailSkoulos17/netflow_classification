@@ -10,7 +10,9 @@ from sklearn.cluster import KMeans
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
-sys.path.insert(0, parentdir)
+prev_parentdir = os.path.dirname(parentdir)
+sys.path.insert(0, prev_parentdir)
+
 
 from pypackage.flexfringe.utils import preprocess_bidirectional_data, rolling_window, lists_identical, netflow_encoding, \
     find_percentile, remove_background, date_diff, split_data
