@@ -93,9 +93,9 @@ def discretize(data, percentile_num, data_dir, window_size, stride_size, conf=Fa
     data = data.sort_index()
     selected_features = ['duration', 'protocol', 'packets', 'src_bytes', 'dst_bytes']
     if conf:
-    	all_connections = [group for _, group in data.groupby(['src_ip', 'dst_ip']) if len(group) > 500]
+        all_connections = [group for _, group in data.groupby(['src_ip', 'dst_ip']) if len(group) > 500]
     else:
-	    all_connections = [group for _, group in data.groupby(['src_ip', 'dst_ip'])]
+        all_connections = [group for _, group in data.groupby(['src_ip', 'dst_ip'])]
 
     for selected_data in all_connections:
         src_ip = selected_data.iloc[0]['src_ip']
@@ -160,26 +160,18 @@ def discretize(data, percentile_num, data_dir, window_size, stride_size, conf=Fa
         # selected_data['encoded'].rolling(window='20ms').apply(lambda x: foo(x, windows))
 
         # windows with manual way
-        dates = selected_data.index.tolist()
-        if len(dates) < 2:
-            continue
-        date_diffs = [date_diff(s, t) for s, t in zip(dates, dates[1:])]
-        # date_diffs = [d for d in date_diffs if d != 0]
-        date_median = int(np.median(date_diffs))
-        if date_median == 0:
-            date_median += 1
-        print('Window = {}, Stride = {}'.format(str(date_median * window_size), str(date_median * window_size / 2)))
+        print('Window = {}, Stride = {}'.format(str( window_size), str(stride_size)))
         starting_date = selected_data.index.tolist()[0].strftime('%d/%m/%Y %H:%M:%S')
         ending_date = selected_data.index.tolist()[-1].strftime('%d/%m/%Y %H:%M:%S')
         r = pd.date_range(start=starting_date, end=ending_date,
-                          freq=str(int(date_median * window_size / 2)) + 's').strftime(
+                          freq=str(int(window_size / 2)) + 's').strftime(
             '%d/%m/%Y %H:%M:%S').values
         # r = pd.date_range(start=starting_date, end=ending_date, freq='{}ms'.format(stride_size)).strftime(
         #     '%d/%m/%Y %H:%M:%S:%S.%f').values
         if len(r) >= 3:
             windows_dates = list(map(tuple, rolling_window(r, int(window_size / stride_size) + 1)[:, [0, -1]].tolist()))
         else:
-            continue
+            windows_dates = [(starting_date, ending_date)]
         windows = []
         prev_window = []
         per = 0.1
@@ -237,22 +229,35 @@ def extract_traces(dataset, data_dir, window_size, stride_size, percentile_num, 
     if not os.path.exists('../data/' + data_dir):
         os.makedirs('../data/' + data_dir)
     print("Starting")
-    data = read_and_process_data(dataset)
-    data_dir = data_dir + '/' + dataset.split('/')[-1].rstrip('.csv')
-    if not multiple:
-        configuration_data, data = split_data(data)
-        data = data.sort_index()
-        configuration_data = configuration_data.sort_index()
-        percentile_num = get_precentiles(configuration_data)
-        discretize(configuration_data.copy(), percentile_num, data_dir, window_size, stride_size, conf=True)
+    if multiple:
+        data = read_and_process_data(dataset)
+        data_dir = data_dir + '/' + dataset.split('/')[-1].rstrip('.csv')
+    else:
+        data = dataset[0]
+        data_dir = data_dir + '/' + dataset[1].split('/')[-1].rstrip('.csv')
 
     # assign the cluster id to each value of the selected numerical feature in the way that it is described in
     discretize(data.copy(), percentile_num, data_dir, window_size, stride_size, conf=False)
 
 
+def find_median(data):
+    data = data.set_index(['date'])
+    data = data.sort_index()
+    all_connections = [group for _, group in data.groupby(['src_ip', 'dst_ip'])]
+    medians = []
+    for connection in all_connections:
+        dates = connection.index.tolist()
+        if len(dates) < 2:
+            continue
+        date_diffs = [date_diff(s, t) for s, t in zip(dates, dates[1:])]
+        medians += [int(np.median(date_diffs))]
+    return int(np.mean(medians))
+
+
 def extract_conf_traces(window_size, stride_size, all_conf_data, percentile_num, conf_data_dir, dataset):
-    # conf_data_dir = conf_data_dir
+    median = find_median(all_conf_data.copy())
     discretize(all_conf_data.copy(), percentile_num, conf_data_dir, window_size, stride_size, conf=True)
+    return median
 
 
 def get_precentiles(all_conf_data):
@@ -296,10 +301,19 @@ def discretize_single_scenario():
             if filename == benign_scenario:
                 continue
             else:
-                # data_dir = 'discretized_data/ids/connection/single_scenario/{}'.format(filename.rstrip('.csv'))
                 data_dir = 'discretized_data_100_50/ids/connection/single_scenario'
-                file_path = subdir + filename
-                extract_traces(file_path, data_dir, window_size, stride_size, {}, multiple=False)
+                data = read_and_process_data(subdir + filename)
+                configuration_data, data = split_data(data)
+                data = data.sort_index()
+                configuration_data = configuration_data.sort_index()
+                percentile_num = get_precentiles(configuration_data)
+                median = extract_conf_traces(window_size, stride_size, configuration_data.copy(), percentile_num,
+                                             data_dir,
+                                             filename)
+                # data_dir = 'discretized_data/ids/connection/single_scenario/{}'.format(filename.rstrip('.csv'))
+                # file_path = subdir + filename
+                extract_traces((data, filename), data_dir, window_size * median, stride_size * median, {},
+                               multiple=False)
 
 
 def discretize_multiple_scenarios():
@@ -309,9 +323,9 @@ def discretize_multiple_scenarios():
 
     conf_file = 'Monday-WorkingHours.pcap_ISCX.csv'
     conf_data = read_and_process_data(rootdir + conf_file)
-    percentile_num = get_precentiles(conf_data)
-    # percentile_num = {'duration': 2, 'packets': 2, 'src_bytes': 4, 'dst_bytes': 2}
-    conf_dir = 'discretized_data_100_50/ids/connection/multiple_scenarios'
+    # percentile_num = get_precentiles(conf_data)
+    percentile_num = {'duration': 2, 'packets': 2, 'src_bytes': 4, 'dst_bytes': 2}
+    conf_dir = 'discretized_data_{}_{}/ids/connection/multiple_scenarios'.format(window_size, stride_size)
     extract_conf_traces(window_size, stride_size, conf_data, percentile_num, conf_dir, conf_file)
     for subdir, dirs, files in os.walk(rootdir):
         for filename in files:
@@ -321,11 +335,11 @@ def discretize_multiple_scenarios():
                 continue
             else:
                 # data_dir = 'discretized_data/ids/connection/multiple_scenarios/{}'.format(filename.rstrip('.csv'))
-                data_dir = 'discretized_data_100_50/ids/connection/multiple_scenarios'
+                data_dir = 'discretized_data_{}_{}/ids/connection/multiple_scenarios'.format(window_size, stride_size)
                 file_path = subdir + filename
                 extract_traces(file_path, data_dir, window_size, stride_size, percentile_num, multiple=True)
 
 
 if __name__ == '__main__':
-    discretize_single_scenario()
-    # discretize_multiple_scenarios()
+    # discretize_single_scenario()
+    discretize_multiple_scenarios()

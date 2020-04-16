@@ -369,8 +369,8 @@ def extract_conf_traces(window_size, stride_size, all_conf_data, percentile_num,
 
 
 def discretize_for_single_scenario():
-    window_size = 1000
-    stride_size = 500
+    window_size = 100
+    stride_size = 50
     scenarios = list(range(42, 55))
     training_sets = [44, 45, 46, 48, 51, 52, 52, 54]
     for s in scenarios:
