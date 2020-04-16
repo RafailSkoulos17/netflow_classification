@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 import inspect
+import os
+import sys
+
 import matplotlib.pyplot as plt
 import numpy as np
-import os
 import pandas as pd
-import sys
 from sklearn.cluster import KMeans
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -258,22 +259,13 @@ def discretize(data, data_dir, scenario, window_size, stride_size, percentile_nu
         selected_data = selected_data['encoded']
 
         # windows with manual way
-        dates = selected_data.index.tolist()
-        if len(dates) < 2:
-            continue
-        date_diffs = [date_diff(s, t) for s, t in zip(dates, dates[1:])]
-        # date_diffs = [d for d in date_diffs if d != 0]
-        date_median = int(np.median(date_diffs))
-        if date_median == 0:
-            date_median += 1
-        print('Window = {}, Stride = {}'.format(str(date_median * window_size), str(date_median * window_size / 2)))
+
+        print('Window = {}, Stride = {}'.format(str(window_size), str(window_size / 2)))
         starting_date = selected_data.index.tolist()[0].strftime('%Y/%m/%d %H:%M:%S.%f')
         ending_date = selected_data.index.tolist()[-1].strftime('%Y/%m/%d %H:%M:%S.%f')
         r = pd.date_range(start=starting_date, end=ending_date,
-                          freq=str(date_median * window_size / 2) + 'ms').strftime(
+                          freq=str(stride_size) + 'ms').strftime(
             '%Y-%m-%d %H:%M:%S.%f').values
-        # r = pd.date_range(start=starting_date, end=ending_date, freq='{}ms'.format(stride_size)).strftime(
-        #     '%Y-%m-%d %H:%M:%S.%f').values
         if len(r) >= 3:
             windows_dates = list(map(tuple, rolling_window(r, int(window_size / stride_size) + 1)[:, [0, -1]].tolist()))
         else:
@@ -339,24 +331,41 @@ def extract_traces(dataset, data_dir, scenario,
     if multiple:
         data = data_dict[int(scenario.split('_')[-1])]
     else:
-        data = read_and_process_data(dataset)
+        data = dataset
     print("Starting")
     # ## Pick one infected host and the normal ones
 
-    if not multiple:
-        configuration_data, data = split_data(data)
-        configuration_data = configuration_data.sort_index()
-        data = data.sort_index()
-        percentile_num = get_precentiles(configuration_data)
-        discretize(configuration_data.copy(), scenario, data_dir, window_size, stride_size, percentile_num,
-                   case=case, conf=True)
+    # if not multiple:
+    #     configuration_data, data = split_data(data)
+    #     configuration_data = configuration_data.sort_index()
+    #     data = data.sort_index()
+    #     percentile_num = get_precentiles(configuration_data)
+    #     discretize(configuration_data.copy(), scenario, data_dir, window_size, stride_size, percentile_num,
+    #                case=case, conf=True)
 
     discretize(data.copy(), data_dir, scenario, window_size, stride_size, percentile_num, case=case, conf=False)
 
 
+def find_median(data):
+    data = data.set_index(['date'])
+    data = data.sort_index()
+    all_connections = [group for _, group in data.groupby(['src_ip', 'dst_ip'])]
+    medians = []
+    for connection in all_connections:
+        dates = connection.index.tolist()
+        if len(dates) < 2:
+            continue
+        date_diffs = [date_diff(s, t) for s, t in zip(dates, dates[1:])]
+        medians += [int(np.median(date_diffs))]
+    return int(np.mean(medians))
+
+
 def extract_conf_traces(window_size, stride_size, all_conf_data, percentile_num, conf_data_dir, scenario):
-    discretize(all_conf_data.copy(), conf_data_dir, scenario, window_size, stride_size, percentile_num,
+    median = find_median(all_conf_data.copy())
+    discretize(all_conf_data.copy(), conf_data_dir, scenario, window_size * median, stride_size * median,
+               percentile_num,
                case='train', conf=True)
+    return median
 
 
 def discretize_for_single_scenario():
@@ -368,15 +377,22 @@ def discretize_for_single_scenario():
         scenario = 'scenario_{}'.format(s)
         dataset = 'CTU-Malware-Capture-Botnet-{}'.format(s)
         data_dir = 'discretized_data/ctu_13/connection/single_scenario/{}/{}-{}_traces_ctu_{}'.format(scenario,
-                                                                                                              window_size,
-                                                                                                              stride_size,
-                                                                                                              s)
+                                                                                                      window_size,
+                                                                                                      stride_size,
+                                                                                                      s)
         if s in training_sets:
             case = 'train'
         else:
             case = 'test'
-        extract_traces(dataset, data_dir, scenario, window_size,
-                       stride_size, {}, {}, case=case, multiple=False)
+        data = read_and_process_data(dataset)
+        configuration_data, data = split_data(data)
+        configuration_data = configuration_data.sort_index()
+        data = data.sort_index()
+        percentile_num = get_precentiles(configuration_data)
+        median = extract_conf_traces(window_size, stride_size, configuration_data.copy(), percentile_num, data_dir,
+                                     scenario)
+        extract_traces(data, data_dir, scenario, window_size*median,
+                       stride_size*median, {}, {}, case=case, multiple=False)
 
 
 def discretize_for_multiple_scenarios():
@@ -399,9 +415,10 @@ def discretize_for_multiple_scenarios():
     all_conf_data = all_conf_data.sort_index()
     # # percentile_num = get_precentiles(all_conf_data)
     percentile_num = {'duration': 2, 'packets': 3, 'src_bytes': 2, 'dst_bytes': 2}
-    conf_dir = 'discretized_data_{}median_{}median/ctu_13/connection/multiple_scenarios/configuration_data/'.format(window_size,
-                                                                                                        stride_size)
-    extract_conf_traces(window_size, stride_size, all_conf_data, percentile_num, conf_dir, '')
+    conf_dir = 'discretized_data_{}median_{}median/ctu_13/connection/multiple_scenarios/configuration_data/'.format(
+        window_size,
+        stride_size)
+    median = extract_conf_traces(window_size, stride_size, all_conf_data, percentile_num, conf_dir, '')
     for s in scenarios:
         scenario = 'scenario_{}'.format(s)
         dataset = 'CTU-Malware-Capture-Botnet-{}'.format(s)
@@ -414,10 +431,12 @@ def discretize_for_multiple_scenarios():
             s)
 
         if s in training_sets:
-            extract_traces(dataset, data_dir, scenario, window_size, stride_size, data_dict, percentile_num,
+            extract_traces(dataset, data_dir, scenario, window_size * median, stride_size * median, data_dict,
+                           percentile_num,
                            'train', multiple=True)
         else:
-            extract_traces(dataset, data_dir, scenario, window_size, stride_size, data_dict, percentile_num,
+            extract_traces(dataset, data_dir, scenario, window_size * median, stride_size * median, data_dict,
+                           percentile_num,
                            'test', multiple=True)
 
 
