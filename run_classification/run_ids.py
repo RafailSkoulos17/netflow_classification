@@ -41,11 +41,7 @@ def flexfringe(*args, **kwargs):
             # return fh.read()
             return states
     except FileNotFoundError:
-        pass
-    return "No output file was generated."
-    except FileNotFoundError:
-        pass
-    return "No output file was generated."
+        return "No output file was generated."
 
 
 def show(data):

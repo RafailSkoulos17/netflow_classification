@@ -32,6 +32,7 @@
 #include "interactive.h"
 #include "common.h"
 #include "inputdata.h"
+#include "dfs.h"
 
 #include <chrono>
 #include "parameters.h"
@@ -96,6 +97,8 @@ void init_with_params(parameters *param) {
     LSH_D = param->lsh_d;
     LSH_N = param->lsh_n;
     LSH_C = param->lsh_c;
+    LSH_T = param->lsh_t;
+    LSH_W = param->lsh_w;
 
 
     COMMAND = param->command;
@@ -120,67 +123,7 @@ void init_with_params(parameters *param) {
     }
 }
 
-void DFSUtil(apta_node *v, apta_node *v_init, map<int, bool> visited, int path_index, int length, vector<int> symbols,
-             list <vector<int>> &all_symbols, int depth) {
-    // Mark the current node as visited and
-    // print it
-    bool found = false;
-    if (length < depth) {
-        visited[v->number] = true;
-//        cout << v->label << " ";
-        symbols[length] = v->label;
-        length += 1;
-        // Recur for all the vertices adjacent
-        // to this vertex
-        list < apta_node * > adj;
-        for (auto it = v->guards.begin(); it != v->guards.end(); ++it) {
-            apta_node *target = (*it).second->target;
-            adj.push_back(target);
-        }
-        if (adj.empty()) {
-            vector<int> b(symbols.begin() + 1, symbols.begin() + length);
-            all_symbols.push_back(b);
-//            cout << (v_init)->number << ": ";
-//            for (int i = 0; i < length - 1; i++) {
-//                cout << b[i] << " ";
-//            }
-//            cout << std::endl;
-        } else {
-            list<apta_node *>::iterator i;
-            for (auto i = adj.begin(); i != adj.end(); ++i) {
-                apta_node *n = *i;
-                if (!visited[n->number]) {
-                    DFSUtil(n, v_init, visited, path_index, length, symbols, all_symbols, depth);
-                }
-            }
-        }
-    } else if (length == depth) {
-        vector<int> b(symbols.begin() + 1, symbols.end());
-        all_symbols.push_back(b);
-//        cout << (v_init)->number << ": ";
-//        for (int i = 0; i < depth - 1; i++) {
-//            cout << b[i] << " ";
-//        }
-//        cout << std::endl;
 
-    }
-}
-
-// DFS traversal of the vertices reachable from v.
-// It uses recursive DFSUtil()
-void DFS(apta_node *v, list <vector<int>> &all_symbols, int depth) {
-    // Mark all the vertices as not visited
-    map<int, bool> visited;
-    int V = depth;
-
-    // Create an array to store paths
-    vector<int> symbols(V);
-    int path_index = 0; // Initialize path[] as empty
-    int length = 0;
-    // Call the recursive helper function
-    // to print DFS traversal
-    DFSUtil(v, v, visited, path_index, length, symbols, all_symbols, depth);
-}
 
 
 // A recursive function to print all paths from 'u' to 'd'.
@@ -303,10 +246,11 @@ void run(parameters *param) {
 
 //      EXPERIMENTS
 //        char const *lsh_string = "lsh";
-        char const *lsh_string = "lsh2";
+        char const *lsh_string_2 = "lsh2";
+        char const *lsh_string_3 = "lsh3";
         char *paraHname = new char[(param->hName).length() + 1];
         strcpy(paraHname, (param->hName).c_str());
-        if (!strcmp(paraHname, lsh_string)) {
+        if (!strcmp(paraHname, lsh_string_3) || !strcmp(paraHname, lsh_string_2)) {
             std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
             int total_traces = 0;
             for (merged_APTA_iterator it = merged_APTA_iterator(the_apta->root); *it != 0; ++it) {
@@ -484,7 +428,7 @@ int main(int argc, const char *argv[]) {
              "When set to 1, the algorithm only tries to merge the most frequent (or most shallow if w=1) candidate (blue) states with any target (red) state, instead of all candidates; default=0. Advice: this reduces run-time significantly but comes with a potential decrease in merge quality.",
              "integer"},
             {"blueblue", 'b', POPT_ARG_INT, &(param->blueblue), 'b',
-             "When set to 1, the algorithm tries to merge candidate (blue) states with candiate (blue) states in addition to candidate (blue) target (red) merges; default=0. Advice: this adds run-time to the merging process in exchange for potential improvement in merge quality.",
+             "When set to 1, the algorithm tries to merge candidate (blue) states with candidate (blue) states in addition to candidate (blue) target (red) merges; default=0. Advice: this adds run-time to the merging process in exchange for potential improvement in merge quality.",
              "integer"},
             {"finalred", 'f', POPT_ARG_INT, &(param->finalred), 'f',
              "When set to 1, merges that add new transitions to red states are considered inconsistent. Merges with red states will also not modify any of the counts used in evaluation functions. Once a red state has been learned, it is considered final and unmodifiable; default=0. Advice: setting this to 1 frequently results in easier to vizualize and more insightful models.\n\nSettings that influece the use of sinks:",
@@ -561,6 +505,12 @@ int main(int argc, const char *argv[]) {
              "int"},
             {"difference", 'i', POPT_ARG_INT, &(param->lsh_c), 'i',
              "difference.",
+             "int"},
+            {"width", 'W', POPT_ARG_INT, &(param->lsh_w), 'W',
+             "bin width.",
+             "int"},
+            {"index", 'g', POPT_ARG_INT, &(param->lsh_t), 'g',
+             "Index mode, you can choose 1(CAUCHY) or 2(GAUSSIAN)",
              "int"},
             POPT_AUTOHELP
             POPT_TABLEEND

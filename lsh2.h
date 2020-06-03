@@ -3,8 +3,10 @@
 
 #include "evaluate.h"
 #include <string>
-//#include <lsh/include/rh_lsh.h>
-#include <lsh/include/rbs_lsh.h>
+
+//#include <lsh/include/psd_lsh.h>
+#include <lsh/include/rh_lsh.h>
+//#include <lsh/include/rbs_lsh.h>
 
 
 /* The data contained in every node of the prefix tree or DFA */
@@ -22,10 +24,14 @@ public:
     vector<int> counter;
     int total;
 
-//    lshbox::rhpLsh<int> *mylsh;
-    lshbox::rbsLsh<int> *mylsh;
-//    lshbox::rhpLsh<int>::Parameter param;
-    lshbox::rbsLsh<int>::Parameter param;
+    lshbox::rhpLsh<int> *mylsh;
+    lshbox::rhpLsh<int>::Parameter param;
+
+//    lshbox::rbsLsh<int> *mylsh;
+//    lshbox::rbsLsh<int>::Parameter param;
+
+//    lshbox::psdLsh<int> *mylsh;
+//    lshbox::psdLsh<int>::Parameter param;
 
     lsh2_data();
 

@@ -1,12 +1,5 @@
-import os
 from sklearn.model_selection import train_test_split
-from functools import reduce
-import numpy as np
-import pandas as pd
 import os
-import sys
-import warnings
-from collections import Counter
 from functools import reduce
 
 import matplotlib.colors as mcolors
@@ -14,8 +7,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from IPython.display import display, HTML
-from sklearn.cluster import KMeans
+from sklearn.model_selection import train_test_split
+
 
 def read_data(filepath):
     preprocess_data(filepath)
@@ -37,21 +30,21 @@ def preprocess_data(filepath):
     for line in lines[1:]:
         try:
             elements = []
-            columns = line.split(',')
-            elements += [columns[0] + ' ' + columns[1]]
+            columns = [x for x in line.split('\t') if x != '']
+            elements += [columns[0]]
+            elements += [columns[1]]
             elements += [columns[2]]
-            elements += [columns[3]]
-            elements += [columns[4].split(':')[0]]
-            elements += ['na' if len(columns[4].split(':')) == 1 else columns[4].split(':')[1]]
-            elements += [columns[5]]
-            elements += [columns[6].split(':')[0]]
-            elements += ['na' if len(columns[6].split(':')) == 1 else columns[6].split(':')[1]]
+            elements += [columns[3].split(':')[0]]
+            elements += ['na' if len(columns[3].split(':')) == 1 else columns[3].split(':')[1]]
+            elements += [columns[4]]
+            elements += [columns[5].split(':')[0]]
+            elements += ['na' if len(columns[5].split(':')) == 1 else columns[5].split(':')[1]]
+            elements += [columns[6]]
             elements += [columns[7]]
             elements += [columns[8]]
             elements += [columns[9]]
             elements += [columns[10]]
             elements += [columns[11]]
-            elements += [columns[12]]
             fout.write(','.join(elements))
             fout.write('\n')
         except IndexError:
@@ -66,7 +59,7 @@ def preprocess_bidirectional_data(filepath):
         lines = f.readlines()
     fout = open(filepath + '_v2', 'w')
     column_names = ['date', 'duration', 'protocol', 'src_ip', 'src_port', 'direction', 'dst_ip', 'dst_port', 'state',
-                    'stos', 'dtos', 'packets', 'src_bytes', 'dst_bytes', 'label']
+                    'stos', 'dtos', 'packets', 'src_bytes', 'dst_bytes', 'total_bytes', 'label']
     fout.write(','.join(column_names))
     fout.write('\n')
     for line in lines[1:]:
@@ -87,6 +80,7 @@ def preprocess_bidirectional_data(filepath):
             elements += [columns[11]]  # packets
             elements += [columns[13]]  # src bytes
             elements += [str(int(columns[12]) - int(columns[13]))]  # dst bytes
+            elements += [columns[12]]  # total bytes
             elements += ['Botnet' if 'Botnet' in columns[14] else (
                 'Normal' if 'Normal' in columns[14] else 'Background')]  # label
             fout.write(','.join(elements))
@@ -224,16 +218,16 @@ def date_diff(d1, d2):
     # d1 = datetime.datetime.strptime(str(d1), '%d/%m/%Y %H:%M:%S:%S.%f')
     # d2 = datetime.datetime.strptime(str(d2), '%d/%m/%Y %H:%M:%S:%S.%f')
     d = d2 - d1
-    d = int(d.total_seconds())*1000
+    d = int(d.total_seconds() * 1000)
     return d
 
 
-def split_data(data):
-    beinign_data = data[(data['label'] == 0) | (data['label'] == 'Normal')]
-    configuration_data, other_data = train_test_split(beinign_data, test_size=0.7, random_state=42)
+def split_data(data, normal_ips=[]):
+    # beinign_data = data[(data['label'] == 0) | (data['label'] == 'Normal')]
+    benign_data = data[data['src_ip'].isin(normal_ips)]
+    configuration_data, other_data = train_test_split(benign_data, test_size=0.7, random_state=42)
     del_indices = configuration_data.index.tolist()
     data_to_return = data.drop(del_indices)
     configuration_data = configuration_data.sort_index()
     data_to_return = data_to_return.sort_index()
     return configuration_data, data_to_return
-

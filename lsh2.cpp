@@ -10,8 +10,9 @@
 #include <string>
 #include "parameters.h"
 #include "lsh2.h"
-//#include <lsh/include/rh_lsh.h>
-#include <lsh/include/rbs_lsh.h>
+//#include <lsh/include/psd_lsh.h>
+#include <lsh/include/rh_lsh.h>
+//#include <lsh/include/rbs_lsh.h>
 #include<cmath>
 #include <tuple>
 
@@ -22,17 +23,25 @@ lsh2_data::lsh2_data() {
 //    TODO: delete type declaration
     occcurences = map<int, int>();
 //    kl_score = map<string, float>();
-    mylsh = new lshbox::rbsLsh<int>();
-    lshbox::rbsLsh<int>::Parameter param;
+
+//    mylsh = new lshbox::rbsLsh<int>();
+//    lshbox::rbsLsh<int>::Parameter param;
+
+    mylsh = new lshbox::rhpLsh<int>();
+    lshbox::rhpLsh<int>::Parameter param;
+
+//    mylsh = new lshbox::psdLsh<int>();
+//    lshbox::psdLsh<int>::Parameter param;
+
     int total = 0;
-//    mylsh = new lshbox::rhpLsh<int>();
-//    lshbox::rhpLsh<int>::Parameter param;
     vector<int> counter(LSH_D);
     param.M = LSH_M; // Hash table size
     param.L = LSH_L; // Number of hash tables
     param.D = LSH_D; // Dimension of the vector
+//    param.T = LSH_T; // Index mode, you can choose 1(CAUCHY) or 2(GAUSSIAN)
+//    param.W = LSH_W; // Window size
     param.N = LSH_N; // Binary code bytes
-    param.C = LSH_C; // The Difference between upper and lower bound of each dimension
+//    param.C = LSH_C; // The Difference between upper and lower bound of each dimension
     mylsh->reset(param);
 };
 
@@ -356,19 +365,32 @@ bool lsh2::consistent(state_merger *merger, apta_node *left, apta_node *right) {
 void lsh2::update_score(state_merger *merger, apta_node *left, apta_node *right) {
     num_merges += 1;
 //    kl_total_score += compute_score(merger, left, right);
+//    kl_total_score = compute_score(merger, left, right);
 
 };
 
 int lsh2::compute_score(state_merger *merger, apta_node *left, apta_node *right) {
     return num_merges;
-//    lsh2_data * l = (lsh2_data *) left->data;
-//    lsh2_data * r = (lsh2_data *) right->data;
+
+//        int l_total, r_total;
+//        lsh2_data * l = (lsh2_data *) left->data;
+//        lsh2_data * r = (lsh2_data *) right->data;
 //
-//    vector<float> l_dist = get_distribution(l->mylsh->tables);
-//    vector<float> r_dist = get_distribution(r->mylsh->tables);
-//    return (int)(1000 - kl_divergence2(l_dist, r_dist) * 1000.0);
-//    return (int) (1000 - kl_score[std::to_string(right->number) + "_" + std::to_string(left->number)] * 1000.0);
-//    return (int) (1000 - kl_score[std::to_string(right->number) + "_" + std::to_string(left->number)] * 1000.0);
+//    //    tie(l_counter,l_total) = get_distribution(l->mylsh->tables);
+//    //    tie(r_counter,r_total) = get_distribution(r->mylsh->tables);
+//
+//        vector<float> ldist(LSH_D);
+//        vector<float> rdist(LSH_D);
+//        for (int i = 0; i != (l->counter).size(); ++i) {
+//            ldist[i] = ((float) l->counter[i]) / ((float) l->total);
+//            rdist[i] = ((float) r->counter[i]) / ((float) r->total);
+//        }
+//
+//        return (int) (1000 * 1/kl_divergence2(ldist, rdist));
+////        return 100000 - (int)(kl_divergence2(ldist, rdist) * 100000.0);
+//    //    return (int)(1000 - kl_divergence2(l_dist, r_dist) * 1000.0);
+//    //    return (int) (1000 - kl_score[std::to_string(right->number) + "_" + std::to_string(left->number)] * 1000.0);
+//    //    return (int) (1000 - kl_score[std::to_string(right->number) + "_" + std::to_string(left->number)] * 1000.0);
 };
 
 

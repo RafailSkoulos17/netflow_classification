@@ -49,6 +49,8 @@ extern int LSH_L;
 extern int LSH_D;
 extern int LSH_N;
 extern int LSH_C;
+extern int LSH_T;
+extern int LSH_W;
 
 class parameters {
 public:
@@ -96,7 +98,9 @@ public:
     int lsh_l = 1;
     int lsh_d = 20;
     int lsh_n = 100;
-    int lsh_c = 18;
+    int lsh_c = 8;
+    int lsh_t = 2;
+    int lsh_w = lsh_d;
 
     parameters();
 

@@ -5,3 +5,5 @@ cmake-build-debug/*
 *.dot
 __pycache__/*
 profiling_results/*
+*.o
+*.tex

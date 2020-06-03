@@ -5,7 +5,7 @@
 /**
  * @file rhplsh.h
  *
- * @brief Locality-Sensitive Hashing Scheme Based on Random Hyperplane.
+ * @brief Locality-Sensitive Hashing Scheme Based on Random Projections.
  */
 #pragma once
 
@@ -120,13 +120,13 @@ namespace lshbox {
 template<typename DATATYPE>
 void lshbox::rhpLsh<DATATYPE>::reset(const Parameter &param_) {
 //    unsigned int my_seed = 1993;
-    srand(1717);
+    srand(1993);
     param = param_;
     tables.resize(param.L);
     uosArray.resize(param.L);
     rndArray.resize(param.L);
 //    std::mt19937 rng(unsigned(std::time(0)));
-    std::mt19937 rng(unsigned(1717));
+    std::mt19937 rng(unsigned(1993));
     std::normal_distribution<float> nd;
     std::uniform_int_distribution<unsigned> usArray(0, param.M - 1);
     for (auto ithRb = uosArray.begin();

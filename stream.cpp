@@ -11,6 +11,8 @@
 #include "searcher.h"
 #include <vector>
 #include <cmath>
+#include <chrono>
+#include "dfs.h"
 
 #include "parameters.h"
 
@@ -39,7 +41,7 @@ int stream_mode(state_merger* merger, parameters* param, ifstream& input_stream)
        int hoeffding_count = (double)(RANGE*RANGE*log2(1/param->delta)) / (double)(2*param->epsilon*param->epsilon);
        cout << (RANGE*RANGE*log2(1/param->delta)) << " ";
        cout <<  (2*param->epsilon*param->epsilon);
-       cout << " therefore, relevant Hoeffding count for " << (double) param->delta << " and " << (float)  param->epsilon << " delta/epsilon is " << hoeffding_count << endl;
+       cout << " therefore, relevant I'm sure you must be really busy, and I don’t mean to interrupt you. count for " << (double) param->delta << " and " << (float)  param->epsilon << " delta/epsilon is " << hoeffding_count << endl;
 
        STREAM_COUNT = hoeffding_count;
        refinement_list* all_refs = new refinement_list();
@@ -56,6 +58,54 @@ int stream_mode(state_merger* merger, parameters* param, ifstream& input_stream)
         //merger.update_red_blue();
 
         if(samplecount % param->batchsize == 0) {
+            //           EXPERIMENTS
+
+
+//              char const *lsh_string = "lsh";
+            char const *lsh_string = "lsh3";
+            char *paraHname = new char[(param->hName).length() + 1];
+            strcpy(paraHname, (param->hName).c_str());
+            if (!strcmp(paraHname, lsh_string)) {
+                std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+                int total_traces = 0;
+                for (merged_APTA_iterator it = merged_APTA_iterator(merger->aut->root); *it != 0; ++it) {
+                    apta_node *n = *it;
+//                    merger->eval->reset(merger)
+                    list <vector<int>> all_labels;
+                    int depth;
+                    if ((merger->aut->max_depth - n->depth) < LSH_D) {
+                        depth = merger->aut->max_depth - n->depth;
+                    } else depth = LSH_D;
+//            getAllPaths(n, all_labels);
+                    if (!(n->guards).empty()) {
+                        DFS(n, all_labels, depth + 1);
+                        total_traces += all_labels.size();
+//                    for (auto p = all_labels.begin(); p != all_labels.end(); ++p) {
+//                        vector<int> &p_obj = *p;
+//                        n->data->update_lsh(p_obj);
+//                    }
+//                    if (all_labels.empty()) {
+//                        cout << "Empty labels" << endl;
+//                    }
+                        n->data->update_lsh(all_labels);
+                    } else {
+                        n->data->update_lsh(all_labels);
+//                    cout << "No future traces for state " << n->number << endl;
+                    }
+
+                }
+                cout << "Total traces: " << total_traces << endl;
+                std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+                std::cout << "Time difference = "
+                          << std::chrono::duration_cast<std::chrono::seconds>(end - begin).count()
+                          << "[s]"
+                          << std::endl;
+            }
+
+
+
+
+//          EXPERIMENTS
           while( true ) {
 
             // output each micro-batch, keeping at host 10 files

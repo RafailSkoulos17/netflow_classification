@@ -33,6 +33,8 @@ int LSH_L = 0;
 int LSH_D = 0;
 int LSH_N = 0;
 int LSH_C = 0;
+int LSH_T = 0;
+int LSH_W = 0;
 
 
 bool EXCEPTION4OVERLAP = false;
@@ -89,6 +91,8 @@ parameters::parameters() {
     lsh_d = 20;
     lsh_n = 100;
     lsh_c = 18;
+    lsh_t = 18;
+    lsh_w = lsh_d;
 
 
 };

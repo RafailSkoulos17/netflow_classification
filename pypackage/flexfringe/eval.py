@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import inspect
 import json
 import os
 import re
@@ -20,6 +21,9 @@ MEAN_REGEX = '(?P<state>\d+) \[shape=(doublecircle|circle|ellipse) label=\"\[(?P
 SYMLST_REGEX = "((?P<sym>\d+):(?P<occ>\d+))+"
 TRAN_REGEX = "(?P<sst>.+) -> (?P<dst>.+) \[label=\"(?P<slst>(.+))\"[ style=dotted]*  \];$"
 
+# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+# parentdir = os.path.dirname(currentdir)
+# sys.path.insert(0, parentdir)
 
 def load_means(content):
     means = []
