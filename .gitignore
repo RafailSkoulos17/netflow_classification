@@ -8,4 +8,8 @@ profiling_results/*
 *.o
 *.tex
 results/*
+final_results/*
 tuning_results/*
+test_results/*
+*.xml
+*.png
