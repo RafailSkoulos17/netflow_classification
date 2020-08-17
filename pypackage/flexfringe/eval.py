@@ -21,6 +21,7 @@ MEAN_REGEX = '(?P<state>\d+) \[shape=(doublecircle|circle|ellipse) label=\"\[(?P
 SYMLST_REGEX = "((?P<sym>\d+):(?P<occ>\d+))+"
 TRAN_REGEX = "(?P<sst>.+) -> (?P<dst>.+) \[label=\"(?P<slst>(.+))\"[ style=dotted]*  \];$"
 
+
 # currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 # parentdir = os.path.dirname(currentdir)
 # sys.path.insert(0, parentdir)
@@ -238,7 +239,10 @@ def predict(prefix, model):
         except:
             #      print("hello")
             break
-    if len(model[state].items()) == 0:
+    try:
+        if len(model[state].items()) == 0:
+            return [(-1, (0, 1))]
+    except KeyError:
         return [(-1, (0, 1))]
     return sorted(model[state].items(), key=lambda x: x[1][1], reverse=True)
 
@@ -319,7 +323,10 @@ def evaluate_PAC(dot, tst):
     target_values = [float(t) for t in target_values]
 
     perplexity_score = calculate_perplexity(prob_list, target_values)
-    print("Perplexity score: ", perplexity_score)
+    optimal_perplexity_score = calculate_perplexity(target_values, target_values)
+
+    # print("Perplexity score: ", perplexity_score)
+    return perplexity_score, optimal_perplexity_score
     # for i, p in enumerate(pred_array):
     #     if p == 0:
     #         print(i)
@@ -517,6 +524,7 @@ def error_based_classification(malicious_model_file, candidate_traces_file, mali
     all_states = set(list(candidate_counter.keys()) + list(malicious_counter.keys()))
     error = 0
     total = 0
+    all_errors = []
     for state in all_states:
         if state in candidate_counter and state in malicious_counter:
             c_sum = candidate_counter[state]
@@ -532,7 +540,9 @@ def error_based_classification(malicious_model_file, candidate_traces_file, mali
             m_sum = 0
         total += c_sum + m_sum
         error += np.abs(c_sum - m_sum)
+        all_errors += [np.abs(c_sum - m_sum) / (c_sum + m_sum)]
     try:
+        # if (np.mean(all_errors)) < threshold:
         if (float(error) / total) < threshold:
             return 1
         else:
@@ -601,6 +611,7 @@ def profiling_evaluation(malicious_model_file, trace_file, highest_acceptance_ra
             # waccept += 1
 
         # if float(trace_num) >= float(0.25 * total_traces):
+        # if trace_num >= math.floor(0.1*total_traces):
         if trace_num >= 25:
             # if reject + accept:
             #     acceptance_ratio = float(accept) / (accept + reject)
@@ -717,11 +728,12 @@ def get_selectivity_threshold(malicious_model_file, benign_traces_files, malicio
                 m_sum = 0
             total += c_sum + m_sum
             error += np.abs(c_sum - m_sum)
+            all_errors += [np.abs(c_sum - m_sum) / (c_sum + m_sum)]
     if total == 0:
         return 0
     else:
-        all_errors += [float(error) / total]  # maybe do it as a percentage
-        return np.mean(all_errors) - 2 * np.std(all_errors)
+        return float(error) / total  # maybe do it as a percentage
+        # return np.mean(all_errors)
     # return np.mean(all_errors) - np.std(all_errors)
     # return error  # maybe do it as a percentage
 

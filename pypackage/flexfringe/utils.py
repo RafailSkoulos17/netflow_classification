@@ -231,3 +231,29 @@ def split_data(data, normal_ips=[]):
     configuration_data = configuration_data.sort_index()
     data_to_return = data_to_return.sort_index()
     return configuration_data, data_to_return
+
+
+def split_data2(data, normal_ips=[]):
+    benign_data = data[data['src_ip'].isin(normal_ips)]
+    benign_flows = len(benign_data)
+    benign_hosts = [group for _, group in benign_data.groupby(['src_ip'])]
+    configuration_data = pd.DataFrame()
+    del_indices = []
+    for host in benign_hosts:
+        configuration_data = pd.concat([configuration_data, host])
+        del_indices += host.index.tolist()
+        if len(configuration_data) >= benign_flows * 0.3:
+            break
+    data_to_return = data.drop(del_indices)
+    configuration_data = configuration_data.sort_index()
+    data_to_return = data_to_return.sort_index()
+    return configuration_data, data_to_return
+
+
+def split_data_multiple(data):
+    configuration_data = data[data['label']=='Normal']
+    del_indices = configuration_data.index.tolist()
+    data_to_return = data.drop(del_indices)
+    configuration_data = configuration_data.sort_index()
+    data_to_return = data_to_return.sort_index()
+    return configuration_data, data_to_return

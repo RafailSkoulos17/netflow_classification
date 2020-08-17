@@ -1,7 +1,7 @@
 #ifndef __KLDISTANCE__
 #define __KLDISTANCE__
 
-#include "../alergia.h"
+#include "alergia.h"
 
 typedef map<int, double> prob_map;
 

@@ -125,73 +125,6 @@ void init_with_params(parameters *param) {
 
 
 
-
-// A recursive function to print all paths from 'u' to 'd'.
-// visited[] keeps track of vertices in current path.
-// path[] stores actual vertices and path_index is current
-// index in path[]
-
-//void getAllPathsUtil(apta_node *u, int length, map<int, bool> visited,
-//                     vector<int> label, int &path_index, vector<int> &all_labels) {
-//    // Mark the current node and store it in path[]
-//    visited[u->number] = true; //TODO: Use map
-////    path[path_index] = u->number;
-//    label[path_index] = u->label;
-//    path_index++;
-//
-//    // If current vertex is same as destination, then print
-//    // current path[]
-//    if (length == 5) {
-//        for (int i = 0; i < path_index; i++) {
-//            cout << label[i] << " ";
-//        }
-//        cout << endl;
-//
-//        vector<int> sliced_labels(label.begin(), label.begin() + path_index);
-//        all_labels = sliced_labels;
-//
-//    } else // If current vertex is not destination
-//    {
-//        length += 1;
-//        list < apta_node * > adj;
-//        for (auto it = u->guards.begin(); it != u->guards.end(); ++it) {
-//            apta_node *target = (*it).second->target;
-////            if(target != 0 && target->representative == 0){
-////            }
-//            adj.push_back(target);
-//
-//        }
-//        // Recur for all the vertices adjacent to current vertex
-//        list<apta_node *>::iterator i;
-//        for (auto i = adj.begin(); i != adj.end(); ++i) {
-//            apta_node *n = *i;
-//            if (!visited[n->number]) {
-//                getAllPathsUtil(n, length, visited, label, path_index, all_labels);
-//            }
-//        }
-//    }
-//
-//    // Remove current vertex from path[] and mark it as unvisited
-//    path_index--;
-//    visited[u->number] = false;
-//}
-//
-//
-//// Prints all paths from 's' to 'd'
-//void getAllPaths(apta_node *s, vector<int> &all_labels) {
-//    // Mark all the vertices as not visited
-//    int V = 100;
-//
-//    // Create an array to store paths
-//    vector<int> label(V);
-//    int path_index = 0; // Initialize path[] as empty
-//
-//    map<int, bool> visited;
-//    // Call the recursive helper function to print all paths
-//    getAllPathsUtil(s, 0, visited, label, path_index, all_labels);
-//}
-
-
 void run(parameters *param) {
 
     state_merger merger;
@@ -243,16 +176,13 @@ void run(parameters *param) {
         id.add_data_to_apta(the_apta);
         the_apta->alp = id.alphabet;
 
-
-//      EXPERIMENTS
-//        char const *lsh_string = "lsh";
-        char const *lsh_string_2 = "lsh2";
-        char const *lsh_string_3 = "lsh3";
+//      Code for LSH heuristic
+        char const *lsh_string = "lsh";
         char *paraHname = new char[(param->hName).length() + 1];
         strcpy(paraHname, (param->hName).c_str());
-        if (!strcmp(paraHname, lsh_string_3) || !strcmp(paraHname, lsh_string_2)) {
-            std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+        if (!strcmp(paraHname, lsh_string)) {
             int total_traces = 0;
+//          iterate all the nodes of APTA and add traces to LSH structure
             for (merged_APTA_iterator it = merged_APTA_iterator(the_apta->root); *it != 0; ++it) {
                 apta_node *n = *it;
                 list <vector<int>> all_labels;
@@ -264,28 +194,13 @@ void run(parameters *param) {
                 if (!(n->guards).empty()) {
                     DFS(n, all_labels, depth + 1);
                     total_traces += all_labels.size();
-//                    for (auto p = all_labels.begin(); p != all_labels.end(); ++p) {
-//                        vector<int> &p_obj = *p;
-//                        n->data->update_lsh(p_obj);
-//                    }
-//                    if (all_labels.empty()) {
-//                        cout << "Empty labels" << endl;
-//                    }
                     n->data->update_lsh(all_labels);
                 } else {
                     n->data->update_lsh(all_labels);
-//                    cout << "No future traces for state " << n->number << endl;
                 }
-
             }
-            cout << "Total traces: " << total_traces << endl;
-            std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-            std::cout << "Time difference = "
-                      << std::chrono::duration_cast<std::chrono::seconds>(end - begin).count()
-                      << "[s]"
-                      << std::endl;
         }
-//      EXPERIMENTS
+//      End of code for LSH heuristic
 
 
         cout << "reading data finished, processing:" << endl;

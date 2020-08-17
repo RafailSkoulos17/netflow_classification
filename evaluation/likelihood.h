@@ -1,7 +1,7 @@
 #ifndef __LIKELIHOOD__
 #define __LIKELIHOOD__
 
-#include "../alergia.h"
+#include "alergia.h"
 
 /* The data contained in every node of the prefix tree or DFA */
 class likelihood_data: public alergia_data {

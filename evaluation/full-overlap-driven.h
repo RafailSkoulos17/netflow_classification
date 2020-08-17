@@ -1,7 +1,7 @@
 #ifndef __FULLOVERLAPDRIVEN__
 #define __FULLOVERLAPDRIVEN__
 
-#include "../alergia.h"
+#include "alergia.h"
 
 /* The data contained in every node of the prefix tree or DFA */
 class full_overlap_data: public alergia_data {

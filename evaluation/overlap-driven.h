@@ -1,7 +1,7 @@
 #ifndef __OVERLAPDRIVEN__
 #define __OVERLAPDRIVEN__
 
-#include "../alergia.h"
+#include "alergia.h"
 
 /* The data contained in every node of the prefix tree or DFA */
 class overlap_data: public alergia_data {

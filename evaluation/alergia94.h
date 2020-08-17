@@ -2,7 +2,7 @@
 #define __ALERGIA94__
 
 #include "evaluate.h"
-#include "../alergia.h"
+#include "alergia.h"
 
 typedef map<int, int> num_map;
 

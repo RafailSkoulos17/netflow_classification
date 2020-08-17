@@ -1,7 +1,7 @@
 #ifndef __CONFLICTDRIVEN__
 #define __CONFLICTDRIVEN__
 
-#include "../alergia.h"
+#include "alergia.h"
 
 /* The data contained in every node of the prefix tree or DFA */
 class conflict_data: public alergia_data {

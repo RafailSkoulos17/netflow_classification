@@ -40,6 +40,8 @@ void DFSUtil(apta_node *v, apta_node *v_init, map<int, bool> visited, int path_i
 //            }
 //            cout << std::endl;
         } else {
+            vector<int> b(symbols.begin() + 1, symbols.begin() + length);
+            all_symbols.push_back(b);
             list<apta_node *>::iterator i;
             for (auto i = adj.begin(); i != adj.end(); ++i) {
                 apta_node *n = *i;
@@ -51,12 +53,6 @@ void DFSUtil(apta_node *v, apta_node *v_init, map<int, bool> visited, int path_i
     } else if (length == depth) {
         vector<int> b(symbols.begin() + 1, symbols.end());
         all_symbols.push_back(b);
-//        cout << (v_init)->number << ": ";
-//        for (int i = 0; i < depth - 1; i++) {
-//            cout << b[i] << " ";
-//        }
-//        cout << std::endl;
-
     }
 }
 

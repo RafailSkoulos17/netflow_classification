@@ -2,7 +2,7 @@
 #define __FIXEDDEPTHREGRESSION__
 
 #include "mse-error.h"
-#include "../alergia.h"
+#include "alergia.h"
 
 typedef list<int> int_list;
 

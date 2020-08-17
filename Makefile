@@ -1,6 +1,6 @@
 CC	=	g++
-CFLAGS	=	-O0 -g
-#CFLAGS	=	-O2 -g
+# CFLAGS	=	-O0 -g
+CFLAGS	=	-O2 -g
 SOURCES = 	*.cpp
 MAIN = main.cpp
 
@@ -8,7 +8,7 @@ MAIN = main.cpp
 #LIBS := $(filter-out evaluation/lsh.h, $(LIBS))
 
 SOURCESPYTHON =	apta.cpp dfasat.cpp  refinement.cpp evaluation_factory.cpp random_greedy.cpp  state_merger.cpp parameters.cpp searcher.cpp stream.cpp interactive.cpp
-LFLAGS 	= 	-std=c++11 -L/opt/local/lib -I/opt/local/include -I./lib -I. -lm -lpopt -lgsl -lgslcblas
+LFLAGS 	= 	-std=gnu++11 -L/opt/local/lib -I/opt/local/include -I./lib -I. -lm -lpopt -lgsl -lgslcblas
 PYTHON_EVAL = evaluation/python.cpp
 
 EVALFILES := $(wildcard evaluation/*.cpp)
@@ -29,10 +29,8 @@ OUTDIR ?= .
 
 .PHONY: all clean
 
-all: regen gitversion.cpp flexfringe
+all: gitversion.cpp flexfringe
 
-regen:
-	sh collector.sh
 
 debug:
 	$(CC) -g $(SOURCES) -o flexfringe $(LFLAGS) $(LIBS)
