@@ -1,6 +1,7 @@
 # README #
 
-flexfringe (formerly DFASAT), a flexible state-merging framework written in C++.
+Thesis project about using LSH as a state-merging heuristic to build state machines and use them to detect malicous network traffic on netflow data. It uses
+flexfringe (formerly DFASAT), a flexible state-merging framework written in C++ (https://bitbucket.org/chrshmmmr/dfasat).
 
 ### What is this repository for? ###
 
