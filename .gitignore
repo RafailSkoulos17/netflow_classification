@@ -7,3 +7,5 @@ __pycache__/*
 profiling_results/*
 *.o
 *.tex
+results/*
+tuning_results/*
